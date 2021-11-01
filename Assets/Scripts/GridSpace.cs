@@ -15,7 +15,7 @@ public class GridSpace : MonoBehaviour
         _button.interactable = false;
 
         string currentStatus = GameController.CheckBoard(GameController.gridSpacesText);
-        Debug.Log("currentStatus: " + currentStatus);
+
         if (currentStatus != "NOT FINISHED") GameController.GameOver(currentStatus);
         else GameController.ChangeSide();
 
