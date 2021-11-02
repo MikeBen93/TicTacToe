@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
     private GameObject _chosenBoard;
 
     private static bool _gameIsOn = false;
+    private static bool _compIsPlaying = false;
     private string _firstPlayerType;
     private string _secondPlayerType;
     private static GameObject[,] _gridSpaces;
@@ -26,12 +27,12 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         // if computer goes first
-        if(_gameIsOn && firstPlayerTurn && _firstPlayerType == "computer" )
+        if(_gameIsOn && firstPlayerTurn && _firstPlayerType == "computer" && _compIsPlaying)
         {
             StartCoroutine(XPlayer());
         }
         // if computer goes second
-        else if (_gameIsOn && !firstPlayerTurn && _secondPlayerType == "computer" )
+        else if (_gameIsOn && !firstPlayerTurn && _secondPlayerType == "computer" && _compIsPlaying)
         {
             StartCoroutine(OPlayer());
         }
@@ -43,7 +44,7 @@ public class GameController : MonoBehaviour
 
         string gameStatus = _computerEnemy.BestMoveXPlayer(gridSpacesText);
         yield return new WaitForSeconds(1f);
-        _gameIsOn = !(gameStatus != "NOT FINISHED");
+        _gameIsOn = (gameStatus == "NOT FINISHED");
     }
 
     private IEnumerator OPlayer()
@@ -52,7 +53,7 @@ public class GameController : MonoBehaviour
 
         string gameStatus = _computerEnemy.BestMoveOPlayer(gridSpacesText);
         yield return new WaitForSeconds(1f);
-        _gameIsOn = !(gameStatus != "NOT FINISHED");
+        _gameIsOn = (gameStatus == "NOT FINISHED");
     }
 
     public void StartGame(int boardSize, string firstPlayer, string secondPlayer)
@@ -66,6 +67,7 @@ public class GameController : MonoBehaviour
         ActivateChoosenBoard();
 
         _gameIsOn = true;
+        _compIsPlaying = true;
     }
 
     private void ChooseBoard(int boardSize)
@@ -98,6 +100,8 @@ public class GameController : MonoBehaviour
     public void ResetChoosenBoard()
     {
         _gameIsOn = false;
+        _compIsPlaying = false;
+
         int rowsAmount = gridSpacesText.GetLength(0);
         int columnsAmount = gridSpacesText.GetLength(1);
 
@@ -109,7 +113,24 @@ public class GameController : MonoBehaviour
                 _gridSpaces[i, j].GetComponent<Button>().interactable = true;
             }
         }
+        firstPlayerTurn = true;
     }
+
+    public void RestartChoosenBoard()
+    {
+        StartCoroutine(Restart());
+    }
+
+    private IEnumerator Restart()
+    {
+        ResetChoosenBoard();
+
+        yield return new WaitForSeconds(1f);
+
+        _gameIsOn = true;
+        _compIsPlaying = true;
+    }
+
 
 
     /// <summary>

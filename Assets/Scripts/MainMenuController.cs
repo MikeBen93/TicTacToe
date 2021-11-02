@@ -29,6 +29,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private Button _computerTurnButton;
 
     [SerializeField] private Button _resetButton;
+    [SerializeField] private Button _tryAgainButton;
 
     private void Update()
     {
@@ -105,6 +106,7 @@ public class MainMenuController : MonoBehaviour
         _mainMenu.SetActive(false);
         _gameController.StartGame(_choosenBoard, _firstPlayer, _secondPlayer);
         _resetButton.gameObject.SetActive(true);
+        _tryAgainButton.gameObject.SetActive(true);
     }
 
     public void ResetParams()
@@ -130,8 +132,11 @@ public class MainMenuController : MonoBehaviour
         _gameController.ResetChoosenBoard();
         _mainMenu.SetActive(true);
         _resetButton.gameObject.SetActive(false);
+        _tryAgainButton.gameObject.SetActive(false);
     }
 
-    
-
+    public void TryAgain()
+    {
+        _gameController.RestartChoosenBoard();
+    }
 }
